@@ -1,1 +1,5 @@
-# TIC-TAC-TOE
+#TIC-TAC-TOE
+from Functions import *
+import random
+
+gameplay()

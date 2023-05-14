@@ -1,5 +1,7 @@
 #TIC-TAC-TOE
 from Functions import *
 import random
-
-gameplay()
+while True:
+    if menu() == 3:
+        print("\n\nGood bye!")
+        break

@@ -41,7 +41,7 @@ def player_move_check(player, occupied, players):
     while True:
         try:
             player_choice = int(input())
-            if 0 < player_choice < 10 and player_choice not in occupied:
+            if 0 < player_choice < 10 and player_choice not in occupied: # must be between 1-9 and board position empty
                 break
             else:
                 print("Please enter a valid move(1-9): ", end = "")
@@ -53,11 +53,13 @@ def player_move_check(player, occupied, players):
 
 # updating board with player move
 def player_move(player, occupied, round, board, players):
-    # Checking if board position selected by player is valid
+    # checking if board position selected by player is valid
     player_choice = player_move_check(player, occupied, players)
+    # appending validated player choice to occupied list so they can't pick it again
     occupied.append(player_choice)
     # updating board and swapping current player
     board[player_choice-1] = player
+    # swapping player turn
     player = "O" if player == "X" else "X"
     round += 1
     
@@ -86,14 +88,15 @@ def gameplay(players = ["X", "O"]):
     while is_winner(board_positions) is False:
         clearscreen()
         print_board(board_positions)
+        # updating variables
         current_player, occupied_positions, round_counter, board_positions = player_move(current_player, occupied_positions, round_counter, board_positions, players)
         if round_counter == 10 and is_winner(board_positions) is False:
             clearscreen()
             print_board(board_positions)
             print(f"It's a draw!")
-            with open("match_log.txt", "a") as match_log:
+            with open("match_log.txt", "a") as match_log: # saving match result in log
                 match_log.write(f"&{players[0]} tied against {players[1]}.\n")
-            with open("game_log.txt", "a") as game_log:
+            with open("game_log.txt", "a") as game_log: # saving board positions in log
                 for i in board_positions:
                     game_log.write(str(i))
                 game_log.write("\n")
@@ -102,17 +105,17 @@ def gameplay(players = ["X", "O"]):
             clearscreen()
             print_board(board_positions)
             if current_player == "X":
-                print(f"The game is over. {players[1]} won.")
+                print(f"The game is over. {players[1]} won.") # saving match result in log
                 with open("match_log.txt", "a") as match_log:
                     match_log.write(f"&{players[1]} won against {players[0]}.\n")
-                with open("game_log.txt", "a") as game_log:
+                with open("game_log.txt", "a") as game_log: # saving game result in log
                     game_log.write("&")
                     for i in board_positions:
                         game_log.write(str(i))
                     game_log.write("\n")
             else: 
                 print(f"The game is over. {players[0]} won.")
-                with open("match_log.txt", "a") as match_log:
+                with open("match_log.txt", "a") as match_log: 
                     match_log.write(f"&{players[0]} won against {players[1]}.\n")
                 with open("game_log.txt", "a") as game_log:
                     game_log.write("&")
@@ -144,30 +147,30 @@ def menu():
     elif user_choice == 3:
         while True:
             clearscreen()
-            if print_match_history() < 5:
+            if print_match_history() < 5: # printing out last 5 game results, must have 5 games played
                 clearscreen()
                 print("You need to play at least 5 matches for Match History to initialize.")
                 input("Press Any Button to return to menu")
                 break
             print("\n  6) Back to menu\nYour input(1-6): ", end = "")
             match_history_input = menu_input_check(1, 6)
-            if match_history_input == 6:
+            if match_history_input == 6: # back to menu
                 break
             else: 
                 clearscreen()
                 print(f"Board state in game number {match_history_input}: \n\n")
-                with open("game_log.txt") as game_log:
+                with open("game_log.txt") as game_log: # printing board positions of selected game
                     history_board_position = game_log.read()
                     history_board_position_split = history_board_position.split("&")
                     print_board(history_board_position_split[-match_history_input])
                 print("  \n\n6) Back to menu")
                 history_board_input = input("Your input: ")
-                if history_board_input == "6":
+                if history_board_input == "6": # back to menu
                     break
     else: 
         exit
     
-    return user_choice
+    return user_choice 
 
 def player_names():
     users = ["X", "O"]
@@ -179,11 +182,11 @@ def player_names():
     return users
 
 def print_match_history():
-    with open("match_log.txt", "r") as match_log:
+    with open("match_log.txt", "r") as match_log: # prints last 5 games
         match_history = match_log.read()
         match_history_split = match_history.split("&")
         if len(match_history_split) < 5:
-            print("You need to play at least 5 matches for Match History to initialize!\n")
+            print("You need to play at least 5 matches for Match History to initialize!\n") # big words
         else: 
             for i in range(1, 6):
                 print(f"{i}) {match_history_split[-i]}")

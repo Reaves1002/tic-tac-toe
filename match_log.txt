@@ -1,0 +1,5 @@
+&Player 1 won against Player 2.
+&Player 2 won against Player 1.
+&Alex won against Andrei.
+&Andrei won against Alex.
+&Alex won against Andrei.

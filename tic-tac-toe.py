@@ -2,6 +2,6 @@
 from Functions import *
 import random
 while True:
-    if menu() == 3:
+    if menu() == 4:
         print("\n\nGood bye!")
         break

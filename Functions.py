@@ -1,4 +1,6 @@
 import os
+import random
+import math
 
 players = ["Player 1", "Player 2"]
 
@@ -16,6 +18,15 @@ def print_board(board):
     print(f"\t  {board[6]}  |  {board[7]}  |  {board[8]}")
     print(f"\t     |     |")
 
+def is_board_full(board):
+    count = 0
+    for i in board:
+        if i is int:
+            count += 1
+    if count > 1:
+        return False
+    return True
+
 # checking if input is valid, num1 and num2 are first and last items in menu
 def menu_input_check(num1, num2):
     while True:
@@ -32,7 +43,7 @@ def menu_input_check(num1, num2):
     return user_choice
             
 # checking if input is valid           
-def player_move_check(player, occupied, players):
+def player_move_check(player, occupied, players = ["X", "O"]):
     if player == "X":
         print(f"It's {players[0]}'s turn. Your input(1-9): ", end = "")
     else: 
@@ -52,7 +63,7 @@ def player_move_check(player, occupied, players):
     return player_choice
 
 # updating board with player move
-def player_move(player, occupied, round, board, players):
+def player_move(player, occupied, round, board, players = ["X", "O"]):
     # checking if board position selected by player is valid
     player_choice = player_move_check(player, occupied, players)
     # appending validated player choice to occupied list so they can't pick it again
@@ -127,15 +138,17 @@ def gameplay(players = ["X", "O"]):
 def menu():
     global players
     clearscreen()
+    board_positions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     print("=========TIC TAC TOE=========")
     print(f"Welcome {players[0]} and {players[1]}!\n")
     print("  1) Play")
     print("  2) Enter player names")
     print("  3) View match history")
-    print("  4) Exit\n")
-    print("Choose from the menu(1-4): ", end = "")
+    print("  4) COMPUTER\n")
+    print("  5) Exit")
+    print("Choose from the menu(1-5): ", end = "")
     # checking if input is correct
-    user_choice = menu_input_check(1, 4)
+    user_choice = menu_input_check(1, 5)
     if user_choice == 1:
         while True:
             gameplay(players)
@@ -167,6 +180,13 @@ def menu():
                 history_board_input = input("Your input: ")
                 if history_board_input == "6": # back to menu
                     break
+    elif user_choice == 4:
+        while not is_winner(board_positions):
+            print_board(board_positions)
+            round = 0
+            occupied = []
+            player, occupied, round, board_positions = player_move("X", occupied, round, board_positions)
+            computer_move(board_positions, occupied)
     else: 
         exit
     
@@ -191,4 +211,39 @@ def print_match_history():
             for i in range(1, 6):
                 print(f"{i}) {match_history_split[-i]}")
                 
-        return len(match_history_split)   
+        return len(match_history_split)
+    
+def computer_ai(board):
+    if is_winner == False:
+        for i in range(len(board)):
+            copied_board = board[:]
+            if copied_board[i] is int:
+                copied_board[i] = "O"
+                if is_winner():
+                    return i
+        for i in range(len(board)):
+            copied_board = board[:]
+            if copied_board[i] is int:
+                copied_board[i] = "X"
+                if is_winner():
+                    return i
+    available_moves = []
+    for i in range(len(board)):
+        if type(i) is int:
+            available_moves.append(board[i])
+        
+    return random.choice(available_moves)
+    
+def computer_move(board, occupied):
+    move = computer_ai(board)
+    print(move)
+    board[move] = "O"
+    occupied.append(move)
+    
+    
+    
+        
+
+        
+    
+            
